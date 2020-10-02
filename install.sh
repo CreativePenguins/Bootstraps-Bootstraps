@@ -74,6 +74,8 @@ brew update
 brew install ${PACKAGES[@]}
 brew install vim --override-system-vi
 brew cask install --appdir="~/Applications" ${CASKS[@]}
+brew tap homebrew/cask-fonts
+brew cask install font-hack-nerd-font
 brew cleanup
 
 # Change default shell to ZSH
