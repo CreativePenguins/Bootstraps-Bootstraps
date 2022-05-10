@@ -18,15 +18,15 @@ PACKAGES=(
   gnupg
   hadolint
   helm
-  homebrew/dupes/openssh
+  openssh
   ipython
   kubernetes-cli
+  lsd
   mas
   node
   nvm
   postgresql
-  python
-  python3
+  pyenv
   ruby
   sqlite
   stern
@@ -35,6 +35,7 @@ PACKAGES=(
   tmux
   tree
   vault
+  vim
   watch
   yamllint
   zsh
@@ -43,47 +44,48 @@ PACKAGES=(
 # Brew casks to install
 CASKS=(
   1password
-  adoptopenjdk11
   atom
   dbeaver-community
   docker
   firefox
-  firefox-developer-edition
   google-chrome
-  google-chrome-canary
   insomnia
   intellij-idea-ce
   iterm2
   pycharm-ce
   rectangle
   slack
+  temurin
   visual-studio-code
 )
 
 # Install developer tools
 echo "Installing Dev Tools..."
 xcode-select --install
+echo "Press return when ready to move on..."
+read -n 1 
 
 # Install homebrew
 echo "Installing homebrew..."
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+echo "Press return when ready to move on..."
+read -n 1
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/hombrew/bin/brew shellenv)"
+
 
 echo "Installing homebrew goodies..."
-brew tap caskroom/cask
 brew update
 brew install ${PACKAGES[@]}
-brew install vim --override-system-vi
-brew cask install --appdir="~/Applications" ${CASKS[@]}
+brew install --cask --appdir="~/Applications" ${CASKS[@]}
 brew tap homebrew/cask-fonts
-brew cask install font-hack-nerd-font
+brew install --cask font-hack-nerd-font
 brew cleanup
-
-# Change default shell to ZSH
-echo "Changing to zsh..."
-chsh $(which zsh)
 
 # Install applications from App Store
 echo "Installing Mac Apps..."
+echo "Please log into Mac App Store to continue and press return when ready..."
+read -n 1
 mas install 603117688 # CCMenu
 mas install 1457158844 # Take a Break - 20/20/20
 mas install 1423210932 # Flow - Pomodoro
@@ -103,9 +105,7 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 
 # Cloning Spaceship prompt for ZSH
 echo "Installing Spaceship..."
-git clone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" --depth=1
-
-# Symlinking 
+git clone https://github.com/spaceship-prompt/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" --depth=1
 ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
 
 # Make room for code
@@ -140,8 +140,8 @@ echo "Setting some cool settings..."
 defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
 
-# Finder: show all filename extensions
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+# Finder: don't show all filename extensions
+defaults write NSGlobalDomain AppleShowAllExtensions -bool false
 
 # Save to disk (not to iCloud) by default
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
